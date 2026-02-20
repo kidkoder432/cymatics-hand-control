@@ -5,6 +5,9 @@ import numpy as np
 import mido
 from time import perf_counter_ns
 
+import serial
+
+ser = serial.Serial('COM15', 115200)
 
 # --- MIDI SETUP ---
 # Ensure you have a port named 'PythonOut' in loopMIDI
@@ -67,6 +70,7 @@ while cap.isOpened():
         rop = get_openness(result.hand_landmarks[1])
 
         print(lx, ly, rx, ry, lop, rop, sep=", ")
+        ser.write(f"{lx:.2f},{ly:.2f},{lop:.2f},{rx:.2f},{ry:.2f},{rop:.2f}\n".encode())
         cv2.putText(frame, f"Left: ({lx:.2f}, {ly:.2f}, Openness: {lop:.2f}), Right: ({rx:.2f}, {ry:.2f}, Openness: {rop:.2f})", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     else:
         cv2.putText(frame, "WARNING: Please use both hands for the controller to work properly.", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
